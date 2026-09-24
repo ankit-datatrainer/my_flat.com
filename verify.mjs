@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const html=fs.readFileSync('dist/index.html','utf8');
+for(const link of html.matchAll(/(?:src|href)="([^"#]+)"/g)){
+ const value=link[1];if(/^(https?:|tel:|data:)/.test(value))continue;
+ assert(fs.existsSync('dist/'+value),'Missing local asset: '+value);
+}
+for(let n=1;n<=20;n++)for(const suffix of ['','-original','-thumb']){
+ const file=`dist/assets/${String(n).padStart(2,'0')}${suffix}.webp`;
+ assert(fs.statSync(file).size>1000,'Missing or empty image: '+file);
+}
+for(const link of html.matchAll(/href="#([^"]+)"/g))assert(html.includes(`id="${link[1]}"`),'Missing section: '+link[1]);
+assert(!html.includes('7,000'),'Old rental price remains');
+assert(html.includes('tel:+917838349247'),'Phone link missing');
+assert(html.includes('https://wa.me/917838349247'),'WhatsApp link missing');
+assert(html.includes('First floor')&&html.includes('One month'),'Rental facts missing');
+console.log('Passed: local assets, 20 complete photo sets, section links, rent and contact destinations.');

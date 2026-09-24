@@ -1,0 +1,6 @@
+const fs=require('node:fs');const path=require('node:path');
+const sharp=require(require.resolve('sharp',{paths:['C:/Users/ankit/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules']}));
+const root=path.resolve('..');const out=path.resolve('dist/assets');fs.mkdirSync(out,{recursive:true});
+const originals=['48','48 (2)','48 (1)','47','47 (3)','47 (2)','47 (1)','46','46 (2)','46 (1)','45','45 (3)','45 (2)','45 (1)','44','44 (2)','44 (1)','43','43 (2)','43 (1)'];
+const names=fs.readdirSync(path.join(root,'listing-ready')).filter(f=>f.endsWith('.png')).sort();
+(async()=>{for(let i=0;i<20;i++){const id=String(i+1).padStart(2,'0');const [sec,variant]=originals[i].split(' ');const original=`WhatsApp Image 2026-09-24 at 11.38.${sec} PM${variant?' '+variant:''}.jpeg`;await Promise.all([sharp(path.join(root,'listing-ready',names[i])).resize({width:1200,withoutEnlargement:true}).webp({quality:85}).toFile(path.join(out,id+'.webp')),sharp(path.join(root,original)).resize({width:1200,withoutEnlargement:true}).webp({quality:85}).toFile(path.join(out,id+'-original.webp')),sharp(path.join(root,'listing-ready',names[i])).resize({width:420}).webp({quality:76}).toFile(path.join(out,id+'-thumb.webp'))]);}console.log('Prepared 20 photo pairs and 20 thumbnails.');})().catch(e=>{console.error(e);process.exit(1)});
