@@ -1,31 +1,54 @@
 # Flat 702
 
-Responsive static property website for 702, Gali No. 9, First Floor, West Vinod Nagar, Mandawali, Delhi 110092.
+Animated, responsive property website for 702, Gali No. 9, First Floor, West Vinod Nagar, Mandawali, Delhi 110092.
 
-Rent: ₹7,500/month. Advance: one month's rent. No fixed security deposit. Contact: +91 78383 49247.
+Rent: ₹7,500/month. Advance: one month's rent. No fixed security deposit. Contact: +91 78383 49247 (call or WhatsApp).
+
+## What's on the page
+
+1. **Preloader**: counts up while the hero photos load, then a curtain wipe reveals the site.
+2. **3D hero (WebGL / Three.js)**: eight real photos on a ring of curved panels with reflections, floating dust and a mouse-parallax camera. Scrolling flies the camera down into the ring, rotates the rooms past you, then pushes the panels outward into "Six spaces. One address." Scroll speed bends the panels and splits their colour channels.
+3. **Ticker**: an endless marquee of key facts whose speed and direction follow your scrolling.
+4. **Essentials**: fact cards flip up in 3D, with a counting rent figure and pointer-tracked tilt and glow.
+5. **3D walkthrough**: a pinned corridor of six chapters. Photos fly past in depth, the copy swaps per chapter, the background tint follows each room's colour, and chapter buttons jump straight to a room.
+6. **Details strip**: vertical scroll drives a horizontal, curved 3D photo strip with parallax and velocity skew.
+7. **Gallery**: 20 photos with clip-path reveals, animated filters, an originals toggle and a full-screen viewer (keyboard and swipe).
+8. **Before/after**: drag a slider between the AI-cleaned preview and the original photo. Six photos are available.
+9. **Location**: an illustrated map draws itself, the pin drops in, and the PIN code rolls in.
+10. **Enquire**: WhatsApp and one-tap Quick Call, plus a tilting rent card. A sticky Call/WhatsApp dock appears on phones.
+
+Other touches: Lenis smooth scrolling, a custom cursor and magnetic buttons (mouse only), word-by-word headline reveals, a film-grain overlay, a scroll progress bar and a header that hides on scroll.
+
+Fonts: Bricolage Grotesque (display/UI) and Instrument Serif (italic accents).
+
+## Accessibility and motion
+
+The site respects the operating system's reduced-motion setting, and the walkthrough has a "Motion on/off" toggle. In calm mode, smooth scrolling, the scroll-driven 3D and the reveal animations are switched off. If WebGL is unavailable, a static photo layout replaces the hero. The photo viewer is a native `<dialog>`, and the tour, strip and gallery items can be reached with the keyboard.
+
+## Structure
+
+```
+dist/
+  index.html
+  css/site.css
+  js/site.js       # GSAP/ScrollTrigger choreography, gallery, viewer, compare, FAQ
+  js/hero3d.js     # Three.js hero scene (ES module)
+  vendor/          # three r169, gsap 3.12.5 + ScrollTrigger, lenis 1.1.13 (vendored, no CDN dependency)
+  assets/          # 20 photos × (cleaned, -original, -thumb) WebP
+```
 
 ## Preview
 
-Run `node server.mjs` from this folder and open http://127.0.0.1:4173.
+```
+node server.mjs
+```
+
+Then open http://127.0.0.1:4173. Run `node verify.mjs` to check links, assets, rent and contact details.
 
 ## Deploy on Vercel
 
-Import the GitHub repository into Vercel with the repository root as the project root. `vercel.json` selects `dist` as the output directory and no framework. No build command, environment variables, or install step is needed. The 60 optimized WebP assets are committed with the site. Once imported, pushes to the production branch can deploy automatically.
+Import the GitHub repository into Vercel with the repository root as the project root. `vercel.json` sets `dist` as the output directory, uses no framework and no build step, and adds cache headers for photos and libraries. Pushes to `main` deploy automatically once the project is connected.
 
-## Website
+## Honesty notes
 
-Deploy the contents of `dist`. No build is needed. The site includes a CSS 3D scroll walkthrough, 20-photo gallery, original/cleaned comparison, accessible photo dialog, WhatsApp and phone links, and a Google Maps address search.
-
-The walkthrough is a photographic presentation in 3D space, not a measured reconstruction or 360-degree scan. The AI-retouched photographs are labeled on the site, and all originals are available for comparison. Room count, floor area, utilities and availability have not been confirmed and are not invented.
-
-The photos are compressed WebP derivatives of the originals and cleaned previews in the parent workspace. `prepare-assets.cjs` recreates the image derivatives on this workstation using its bundled Sharp library. The deployed site does not depend on that script or library.
-
-Run `node --check dist/app.js` and `node verify.mjs` for source and asset checks.
-
-Motion follows the operating system preference and can also be disabled in the walkthrough. Mobile users can navigate chapter buttons and swipe images in the photo viewer. Contact buttons launch the user's dialer or WhatsApp; they do not automatically send a message or initiate a call.
-
-## Scroll hero and responsive layout
-
-The hero now uses a sticky viewport and native scroll progress to position four photo planes in 3D. There is no autoplay timer or focus-dependent animation. Previous/next controls scroll to each photograph; the motion toggle is shared with the walkthrough. `hero.js` drives the presentation and `responsive.css` contains the responsive refinements.
-
-Verified at 320, 390, 768, 1024 and 1440 pixel viewport widths: no horizontal page or content-section overflow. Browser checks covered real-scroll transform changes, reduced-motion fallback, tablet gallery filtering and original-photo comparison, and phone/WhatsApp link destinations. This is local browser verification, not testing on physical devices.
+The walkthrough and hero present real photographs in 3D space. They are not a measured reconstruction or a 360° scan. Cleaned previews are AI-retouched and labelled as such, and the originals are always available. Room count, floor area, utilities and availability are not stated on the site because they haven't been confirmed.
